@@ -35,21 +35,6 @@ services:
     depends_on:
       - api
   
-  client:
-    build:
-      context: .
-      dockerfile: client.Dockerfile
-    volumes:
-      - ./src:/usr/src/app/src
-      - pre-commit-client:/pc/client/cache
-    environment:
-      PRE_COMMIT_HOME: /pc/client/cache     
-      SERVICE_TAGS: 'traefik.enable=true,traefik.port=80,traefik.docker.network=instrument_web,traefik.http.routers.router-client.rule=Host(`suppadesktop.local`),traefik.http.routers.router-client.entrypoints=web'
-      PORT: 80
-    stdin_open: true
-    networks:
-      - instrument_web
-
 volumes:
   pre-commit-api:
   pre-commit-client:

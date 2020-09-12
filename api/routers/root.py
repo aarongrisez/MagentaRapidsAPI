@@ -25,3 +25,7 @@ async def websocket_endpoint(websocket: WebSocket, notifier: MessageManager = De
 @router.post("/backend/push/")
 async def push_to_connected_websockets(events: SynthesizedEvent, notifier: MessageManager = Depends(get_message_manager)):
     await notifier.push(events)
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to MagentaRapids!"}
