@@ -10,7 +10,7 @@ router = APIRouter()
 
 logger = logging.getLogger("api")
 
-@router.websocket("/backend/ws")
+@router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket, notifier: MessageManager = Depends(get_message_manager)):
     await notifier.connect(websocket)
     try:
@@ -22,7 +22,7 @@ async def websocket_endpoint(websocket: WebSocket, notifier: MessageManager = De
     except WebSocketDisconnect:
         await notifier.remove(websocket)
 
-@router.post("/backend/push/")
+@router.post("/push/")
 async def push_to_connected_websockets(events: SynthesizedEvent, notifier: MessageManager = Depends(get_message_manager)):
     await notifier.push(events)
 
