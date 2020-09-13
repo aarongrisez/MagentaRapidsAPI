@@ -24,7 +24,7 @@ def job(*args, **kwargs):
         channel = random.choice(CHANNELS),
         notes = [note]
     )
-    r = requests.post(f"http://api/backend/push/", json=event.dict())
+    r = requests.post(f"https://magenta-rapids-api.herokuapp.com/push/", json=event.dict())
 
 schedule.every(2.87).seconds.do(lambda: job(1))
 schedule.every(3.87).seconds.do(lambda: job(2))
