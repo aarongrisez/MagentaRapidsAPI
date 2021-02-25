@@ -4,43 +4,26 @@ services:
   api:
     build:
       context: .
-      dockerfile: api.Dockerfile
     volumes:
       - .:/src
-      - api-deps:/root/.cache/pypoetry/virtualenvs
-      - pre-commit-api:/pc/api/cache
-    environment:
-      PRE_COMMIT_HOME: /pc/api/cache
-      SERVICE_TAGS: 'traefik.enable=true,traefik.port=80,traefik.docker.network=instrument_web,traefik.http.routers.router-api.rule=Host(`suppadesktop.local`) && PathPrefix(`/backend`)'
     ports:
-      - 80
+      - 8080:80
     networks:
-      - instrument_web
+      - backend
 
   worker:
     build:
       context: .
-      dockerfile: api.Dockerfile
     volumes:
       - .:/src
-      - api-deps:/root/.cache/pypoetry/virtualenvs
-      - pre-commit-api:/pc/api/cache
     environment:
-      PRE_COMMIT_HOME: /pc/api/cache
-      SERVICE_TAGS: 'traefik.enable=true,traefik.port=80,traefik.docker.network=instrument_web,traefik.http.routers.router-worker.rule=Host(`suppadesktop.local`) && PathPrefix(`/worker`)'
+      - API_URL=http://api/
     command: ["poetry", "run", "watchmedo", "auto-restart", "-d", ".", "--recursive", "--", "poetry", "run", "python", "worker.py"]
     working_dir: /src/api
     networks:
-      - instrument_web
+      - backend
     depends_on:
       - api
   
-volumes:
-  pre-commit-api:
-  pre-commit-client:
-  api-deps:
-  client-deps:
-
 networks:
-  instrument_web:
-    external: true
+  backend:
